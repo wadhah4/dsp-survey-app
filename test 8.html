@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DSP Survey – Factor & Strategic Action Evaluation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Chart.js CDN for results page charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      background: linear-gradient(135deg, #f2f9fd 0%, #e2e6ef 100%);
+      color: #1c2230;
+      min-height: 100vh;
+    }
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0;
+      width: 240px;
+      height: 100vh;
+      background: linear-gradient(135deg, #273e56 30%, #1e2837 100%);
+      color: #fff;
+      padding-top: 44px;
+      box-shadow: 2px 0 14px 0 rgba(40,64,112,0.07);
+      z-index: 2;
+      transition: width 0.2s;
+    }
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 32px;
+      font-size: 1.75em;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff;
+      text-shadow: 0 1px 9px #1e2837a0;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px 0;
+    }
+    .sidebar ul li {
+      padding: 17px 32px;
+      cursor: pointer;
+      font-size: 1.08em;
+      border-radius: 0 24px 24px 0;
+      margin-bottom: 6px;
+      transition: background 0.22s, color 0.22s, font-weight 0.18s;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      border-left: 4px solid transparent;
+    }
+    .sidebar ul li.active, .sidebar ul li:hover {
+      background: #e6f3ff15;
+      color: #53ccf4;
+      border-left: 4px solid #53ccf4;
+      font-weight: 600;
+    }
+    .header {
+      margin-left: 240px;
+      background: #fff;
+      padding: 28px 38px 22px 38px;
+      border-bottom: 1px solid #e4ecf5;
+      font-size: 1.5em;
+      font-weight: 700;
+      color: #273e56;
+      letter-spacing: 0.01em;
+      box-shadow: 0 2px 12px 0 rgba(77,128,185,0.045);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .main-content {
+      margin-left: 240px;
+      padding: 48px 32px 40px 32px;
+      min-height: 100vh;
+      box-sizing: border-box;
+      background: transparent;
+      transition: margin-left 0.2s;
+    }
+    .factor-section {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 3px 22px 0 rgba(67, 153, 215, 0.09), 0 0.5px 1.5px #d9e6f3;
+      padding: 36px 38px 34px 38px;
+      max-width: 750px;
+      margin: 56px auto 0 auto;
+      text-align: left;
+      border: 1.5px solid #e2edf7;
+      position: relative;
+    }
+    .factor-title {
+      font-size: 1.35em;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #1665c1;
+      letter-spacing: 0.01em;
+    }
+    .indicator-block, .criteria-block {
+      margin-bottom: 22px;
+    }
+    .indicator-label, .criteria-label {
+      margin-bottom: 7px;
+      color: #273e56;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .rating-group label {
+      margin-right: 15px;
+      font-weight: 400;
+      color: #1c2230;
+      padding: 6px 10px 5px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.14s;
+    }
+    .rating-group input[type="radio"] {
+      accent-color: #53ccf4;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .rating-group label:hover {
+      background: #e4f5ff;
+    }
+    .average-score, .criteria-average {
+      font-weight: 600;
+      color: #21a179;
+      margin-top: 12px;
+      letter-spacing: 0.01em;
+    }
+    .weighted-score {
+      font-weight: 600;
+      color: #f59e42;
+      margin-top: 6px;
+      letter-spacing: 0.01em;
+    }
+    .directrel-score {
+      font-weight: 600;
+      color: #2046c7;
+      margin-top: 7px;
+      letter-spacing: 0.01em;
+    }
+    .indirectrel-score {
+      font-weight: 600;
+      color: #cc2c2c;
+      margin-top: 7px;
+      letter-spacing: 0.01em;
+    }
+    .final-readiness-score {
+      font-weight: bold;
+      color: #005b99;
+      margin-top: 7px;
+      letter-spacing: 0.01em;
+    }
+    .percent-score {
+      font-weight: bold;
+      color: #19bf7a;
+      margin-top: 7px;
+      letter-spacing: 0.01em;
+    }
+    .strategic-action-block {
+      margin-top: 30px;
+      margin-bottom: 16px;
+      background: linear-gradient(90deg, #f1fcff 60%, #eaf1fa 100%);
+      border-left: 5px solid #1665c1;
+      padding: 22px 30px;
+      border-radius: 7px;
+      font-size: 1.06em;
+      box-shadow: 0 1px 6px rgba(46, 112, 180, 0.04);
+    }
+    .strategic-action-title {
+      font-weight: 700;
+      color: #1665c1;
+      margin-bottom: 9px;
+      font-size: 1.02em;
+    }
+    .survey-nav {
+      text-align: center;
+      margin-top: 34px;
+    }
+    .nav-btn {
+      padding: 11px 38px;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #53ccf4 60%, #1665c1 100%);
+      color: #fff;
+      font-size: 1.07em;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 11px;
+      box-shadow: 0 2px 10px 0 rgba(67, 153, 215, 0.13);
+      letter-spacing: 0.01em;
+      transition: background 0.16s, box-shadow 0.13s;
+    }
+    .nav-btn:disabled {
+      background: #cfeaf7;
+      color: #b5b9be;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .nav-btn:hover:enabled {
+      background: linear-gradient(90deg, #1665c1 50%, #53ccf4 100%);
+      color: #fff;
+      box-shadow: 0 4px 16px 0 rgba(67, 153, 215, 0.18);
+    }
+    .progress-bar-container {
+      background: #e9f6fa;
+      border-radius: 7px;
+      height: 22px;
+      width: 100%;
+      max-width: 750px;
+      margin: 0 auto 38px auto;
+      overflow: hidden;
+      box-shadow: 0 1px 4px 0 #c6e9f8;
+      border: 1px solid #dbeffd;
+    }
+    .progress-bar {
+      background: linear-gradient(90deg,#53ccf4 60%,#1665c1 100%);
+      height: 100%;
+      transition: width 0.35s;
+      color: #fff;
+      font-size: 1.03em;
+      text-align: center;
+      line-height: 22px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      border-radius: 7px 0 0 7px;
+      box-shadow: 0 1px 2px #b0e3fb inset;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 900px) {
+      .sidebar, .header, .main-content {
+        margin-left: 0 !important;
+      }
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        box-shadow: none;
+        border-radius: 0 0 14px 14px;
+        padding-top: 16px;
+      }
+      .header {
+        padding: 28px 14px 18px 14px;
+        font-size: 1.19em;
+      }
+      .main-content {
+        padding: 22px 2vw 30px 2vw;
+      }
+      .factor-section, .settings-section, .results-section {
+        padding: 18px 7vw 16px 7vw;
+        margin-top: 20px;
+      }
+      .progress-bar-container {
+        max-width: 100%;
+      }
+    }
+    @media (max-width: 600px) {
+      .factor-section, .settings-section, .results-section {
+        padding: 10px 2vw 10px 2vw;
+        margin-top: 10px;
+      }
+      .sidebar h2 { font-size: 1.1em;}
+      .sidebar ul li { padding: 10px 13px;}
+    }
+
+    .settings-section {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 3px 22px 0 rgba(67, 153, 215, 0.07), 0 0.5px 1.5px #d9e6f3;
+      padding: 32px 36px 30px 36px;
+      max-width: 600px;
+      margin: 56px auto 0 auto;
+      text-align: left;
+      color: #1c2230;
+      border: 1.5px solid #e2edf7;
+    }
+
+    /* --- New for results --- */
+    .results-section {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 18px rgba(34,46,60,0.12), 0 0.5px 1.5px #d9e6f3;
+      padding: 36px 28px 34px 28px;
+      max-width: 1200px;
+      margin: 50px auto 0 auto;
+      text-align: center;
+      position: relative;
+      border: 1.5px solid #e2edf7;
+    }
+    .chart-wrapper {
+      max-width: 540px;
+      margin: 40px auto 25px auto;
+      background: #f3f9fd;
+      border-radius: 11px;
+      padding: 14px 8px;
+      box-shadow: 0 2.5px 9px #dbeffd70;
+    }
+    .bar-chart-wrapper {
+      max-width: 840px;
+      margin: 0 auto 34px auto;
+      background: #f3f9fd;
+      border-radius: 11px;
+      padding: 14px 8px;
+      box-shadow: 0 2.5px 9px #dbeffd60;
+    }
+    .toggle-table-btn {
+      padding: 10px 26px;
+      border: none;
+      border-radius: 6px;
+      background: #fff;
+      color: #1665c1;
+      font-size: 1.07em;
+      font-weight: 700;
+      border: 2px solid #1665c1;
+      margin: 0 7px;
+      cursor: pointer;
+      box-shadow: 0 1px 3px #e7f4ff;
+      transition: background 0.14s, color 0.19s, border 0.13s;
+    }
+    .toggle-table-btn:hover {
+      background: #1665c1;
+      color: #fff;
+      border: 2px solid #53ccf4;
+    }
+    .results-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 20px auto 0 auto;
+      width: 100%;
+      max-width: 1030px;
+      font-size: 1.04em;
+      background: #f7fcff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 14px rgba(34,46,60,0.09);
+      display: none;
+      transition: display 0.2s;
+    }
+    .results-table.visible {
+      display: table;
+    }
+    .results-table th, .results-table td {
+      border: 1.5px solid #bbe1fa;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .results-table th {
+      background: linear-gradient(90deg,#e0f4ff 80%,#f8fdff 100%);
+      color: #1665c1;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .results-table td.final-readiness-score { background:#e0f4ff; }
+    .results-table td.percent-score { background:#eaffea; }
+    /* Add smooth transitions to error/info blocks */
+    .factor-section, .results-section, .settings-section {
+      transition: box-shadow 0.2s, border 0.22s;
+    }
+    /* Minor style for ul in welcome section */
+    .factor-section ul {
+      margin: 0 0 22px 20px;
+      padding: 0;
+      color: #294360;
+      font-size: 1.04em;
+    }
+    .factor-section ul li {
+      margin-bottom: 5px;
+      letter-spacing: 0.01em;
+    }
+    /* Welcome page main title */
+    .factor-section .factor-title {
+      font-size: 2.1em;
+      color: #1665c1;
+      letter-spacing: 0.01em;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .factor-section h2, .results-section h2, .settings-section h2 {
+      color: #1665c1;
+      font-size: 1.5em;
+      font-weight: 700;
+      margin-bottom: 18px;
+      letter-spacing: 0.01em;
+    }
+    /* Minor effect for info blocks */
+    .factor-section > div, .results-section > div, .settings-section > div {
+      transition: color 0.14s;
+    }
+.rec-card {
+  background: #fff;
+  border-radius: 11px;
+  box-shadow: 0 2px 10px #dbeffd44;
+  padding: 18px 22px 15px 22px;
+  margin-bottom: 20px;
+  border-left: 5px solid #2477d6;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  transition: box-shadow 0.18s;
+}
+.rec-card .rec-step {
+  min-width: 36px;
+  min-height: 36px;
+  background: #2477d6;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.18em;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  box-shadow: 0 1px 3px #b2d8fd44;
+}
+.rec-card.rec-long { border-left-color: #21a179; }
+.rec-card.rec-accl { border-left-color: #e6841b; }
+.rec-title {
+  font-size: 1.09em;
+  font-weight: 600;
+  margin: 8px 0 12px 0;
+  color: #1665c1;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+details.rec-card {
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 20px;
+}
+details.rec-card summary {
+  font-size: 1.09em;
+  font-weight: 600;
+  color: #e6841b;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.factor-score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f7fbfe;
+  border: 1.3px solid #e2edf7;
+  border-radius: 16px;
+  padding: 18px 32px;
+  margin-bottom: 26px;
+  min-height: 56px;
+  box-sizing: border-box;
+  font-size: 1.16em;
+  box-shadow: 0 1px 6px #ddefff33;
+}
+.factor-score-label {
+  font-weight: 700;
+  color: #2058b0;
+  letter-spacing: 0.01em;
+  text-align: left;
+  flex: 1 1 auto;
+  margin-right: 20px;
+}
+.factor-score-badge {
+  font-weight: 600;
+  font-size: 1em;
+  border-radius: 22px;
+  padding: 7px 28px 7px 22px;
+  color: #fff;
+  background: #21a179;
+  display: inline-block;
+  min-width: 85px;
+  text-align: center;
+  box-shadow: 0 1px 5px #0001;
+  margin-left: 12px;
+}
+.factor-score-badge.low   { background: #e74c3c; }
+.factor-score-badge.medium{ background: #e6b800; color: #444; }
+.factor-score-badge.high  { background: #21a179; }
+@media (max-width: 700px) {
+  .factor-score-row {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 10px;
+    font-size: 1em;
+  }
+  .factor-score-label {
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+  .factor-score-badge {
+    margin-left: 0;
+    align-self: flex-start;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Dashboard</h2>
+    <ul>
+      <li id="sidebar-home" class="active" onclick="navigate('home')">Survey Home</li>
+      <li id="sidebar-survey" onclick="navigate('survey')">Take Survey</li>
+      <li id="sidebar-results" onclick="navigate('results')">Results</li>
+      <li id="sidebar-recommendations" onclick="navigate('recommendations')">Recommendations</li>
+    </ul>
+  </div>
+  <div class="header">
+    DSP Survey – Factor & Strategic Action Evaluation
+  </div>
+  <div class="main-content" id="mainContent">
+    <!-- Content is rendered here -->
+  </div>
+  <script>
+    // Factor list
+    const factors = [
+      "Technological Compatibility", "Material Availability & Performance", "Infrastructure Requirements",
+      "Cost", "Scalability", "Quality Assurance", "Regulatory Compliance", "Industry Readiness",
+      "Customization Needs", "Sustainability", "Risk Management", "Vendor Support", "Collaboration & Partnerships"
+    ];
+    // Criteria
+    const criteriaLabels = [
+      "Alignment with National Goals",
+      "Impact on Industry Adoption",
+      "Contribution to Economic Growth",
+      "Organizational Readiness",
+      "Ease of Implementation"
+    ];
+    // Ecosystem Plan Data for Recommendations Page
+    const ecosystemPlan = {
+      "Technological Compatibility": {
+        shortTerm: [
+          "Assess current system compatibility",
+          "Identify required integrations",
+          "Start onboarding with national DSP platform"
+        ],
+        longTerm: [
+          "Fully integrate enterprise systems (ERP, PLM) with DSP platform",
+          "Continuously update interoperability standards compliance"
+        ],
+        acceleration: [
+          "Government grants for DSP platform adoption",
+          "Fast-track support from national tech integration offices"
+        ]
+      },
+      "Material Availability & Performance": {
+        shortTerm: [
+          "Submit initial material specifications for validation"
+        ],
+        longTerm: [
+          "Establish internal R&D alignment with certified material development",
+          "Conduct annual re-certification audits"
+        ],
+        acceleration: [
+          "Priority access to national certification labs",
+          "Reduced fees for early adopters"
+        ]
+      },
+      "Infrastructure Requirements": {
+        shortTerm: [
+          "Form internal task force for DSP readiness",
+          "Conduct baseline assessment",
+          "Develop gap report"
+        ],
+        longTerm: [
+          "Upgrade IT systems and digital infrastructure",
+          "Deploy automated DSP logistics workflows"
+        ],
+        acceleration: [
+          "Subsidized infrastructure consulting",
+          "Pilot grants for early IT upgrades"
+        ]
+      },
+      "Risk Management": {
+        shortTerm: [
+          "Update internal policies to align with DSP cybersecurity requirements",
+          "Conduct staff training"
+        ],
+        longTerm: [
+          "Implement full DSP-aligned risk governance framework",
+          "Obtain compliance certification"
+        ],
+        acceleration: [
+          "Cybersecurity toolkits from national regulators",
+          "Certification incentives"
+        ]
+      },
+      "Cost": {
+        shortTerm: [
+          "Map existing DSP incentives",
+          "Build business case",
+          "Submit funding applications"
+        ],
+        longTerm: [
+          "Secure multi-year budget allocation for DSP adoption",
+          "Integrate DSP into investment planning"
+        ],
+        acceleration: [
+          "Financial matchmaking through national portals",
+    
+        ]
+      },
+      "Scalability": {
+        shortTerm: [
+          "Outsource to certified 3D clusters",
+          "Evaluate volumes and design feedback"
+        ],
+        longTerm: [
+          "Set up phased in-house facilities",
+          "Train internal staff",
+          "Integrate feedback loops"
+        ],
+        acceleration: [
+          "Cluster service discounts",
+          "Equipment leasing programs"
+        ]
+      },
+      "Quality Assurance": {
+        shortTerm: [
+          "Review national QA protocols",
+          "Select digital QA tools",
+          "Begin pilot workflows"
+        ],
+        longTerm: [
+          "Institutionalize digital traceability across full lifecycle",
+          "Pursue certification"
+        ],
+        acceleration: [
+          "Access to digital QA software",
+          "Co-funding of traceability trials"
+        ]
+      },
+      "Vendor Support": {
+        shortTerm: [
+          "Register with national platform",
+          "Review supplier database",
+          "Initiate first engagements"
+        ],
+        longTerm: [
+          "Develop supplier performance dashboards",
+          "Establish strategic supplier alliances"
+        ],
+        acceleration: [
+          "Preferential visibility on national procurement lists",
+          "Co-branding opportunities"
+        ]
+      },
+      "Regulatory Compliance": {
+        shortTerm: [
+          "Apply for sandbox entry",
+          "Dedicate internal team for experimentation"
+        ],
+        longTerm: [
+          "Embed sandbox learnings into formal compliance structure",
+          "Influence upcoming DSP policies"
+        ],
+        acceleration: [
+          "Sandbox participation subsidies",
+          "Policy shaping privileges for active participants"
+        ]
+      },
+      "Industry Readiness": {
+        shortTerm: [
+          "Deploy readiness toolkit across departments",
+          "Generate capability heatmap"
+        ],
+        longTerm: [
+          "Update roadmap annually",
+          "Embed DSP KPIs into performance reviews"
+        ],
+        acceleration: [
+          "Technical support for toolkits",
+          "Access to national benchmarking results"
+        ]
+      },
+      "Customization Needs": {
+        shortTerm: [
+          "Train design teams on modular principles",
+          "Revise product development checklists"
+        ],
+        longTerm: [
+          "Shift to modular-centric design for all spare parts",
+          "Document reusability metrics"
+        ],
+        acceleration: [
+          "Design consulting vouchers",
+          "Priority access to modular design certification"
+        ]
+      },
+      "Sustainability": {
+        shortTerm: [
+          "Conduct lifecycle impact audit",
+          "Trial basic reuse/recycling workflows"
+        ],
+        longTerm: [
+          "Adopt full circular design protocols",
+          "Align with national reporting standards"
+        ],
+        acceleration: [
+          "Sustainability credits",
+          "National reporting integration tools"
+        ]
+      },
+      "Collaboration & Partnerships": {
+        shortTerm: [
+          "Register for national innovation hub",
+          "Shortlist potential partners"
+        ],
+        longTerm: [
+          "Launch joint IP and prototyping projects",
+          "Integrate co-developed solutions internally"
+        ],
+        acceleration: [
+          "Matchmaking grants",
+          "IP co-ownership frameworks"
+        ]
+      }
+    };
+    // Survey data (copied from previous answers)
+    const surveyData = [
+      { factor: "Technological Compatibility", weight: 0.31287, indicators: [
+          "Multi-process integration capability is important for shaping or enabling a successful DSP ecosystem in your industry.",
+          "System interoperability with existing digital infrastructure is crucial for DSP adoption in your industry.",
+          "Adaptive precision and monitoring functionality are essential for DSP technologies to operate effectively in your industry."
+        ], strategicAction: "Adopt certified DSP platforms and align internal systems to national interoperability standards."
+      },
+      { factor: "Material Availability & Performance", weight: -0.15459, indicators: [
+          "Availability of materials is a critical factor for enabling DSP adoption in your industry.",
+          "Material compatibility with operational conditions is essential for the reliable performance of DSP in your industry.",
+          "The consistency of local access and certification of validated materials are important for ensuring effective DSP deployment in your industry."
+        ], strategicAction: "Engage with the national material hub to validate and certify materials used in in-house production."
+      },
+      { factor: "Infrastructure Requirements", weight: 0.30076, indicators: [
+          "Data interoperability readiness is important for facilitating DSP adoption in your industry.",
+          "Software-hardware compatibility is essential for integrating DSP systems into your industry’s infrastructure.",
+          "Workflow integration capability is necessary for the success of DSP in your industry."
+        ], strategicAction: "Conduct internal infrastructure audits and align IT, logistics, and storage systems with DSP readiness guidelines."
+      },
+      { factor: "Cost", weight: 0.35329, indicators: [
+          "The affordability of DSP technologies is a key factor in your industry's ability to adopt DSP solutions.",
+          "Cost optimization and lifecycle planning are crucial for ensuring the long-term success of DSP in your industry.",
+          "Aligning cost models with the specific needs of your industry is important for DSP adoption."
+        ], strategicAction: "Integrate DSP risk governance protocols into internal operations, covering data, cybersecurity, and IP management."
+      },
+      { factor: "Scalability", weight: -0.13809, indicators: [
+          "The flexibility of production systems is important for scaling DSP technologies in your industry.",
+          "The integration of scalable processes into existing supply chains is important for enabling DSP growth in your industry.",
+          "Maintaining consistency in quality across scaled operations is essential for the success of DSP in your industry."
+        ], strategicAction: "Utilize available national incentives and develop internal DSP business cases for early-stage investment."
+      },
+      { factor: "Quality Assurance", weight: 0.32519, indicators: [
+          "Consistency in material and part integrity is crucial for ensuring the quality of 3D-printed spare parts in your industry.",
+          "The adoption of real-time monitoring and defect correction is essential for maintaining the quality of DSP in your industry.",
+          "Compliance with industry-wide quality standards is necessary for the successful implementation of DSP in your industry."
+        ], strategicAction: "Leverage centralized 3D printing clusters while building phased in-house capabilities to support future scalability."
+      },
+      { factor: "Regulatory Compliance", weight: 0.31156, indicators: [
+          "Compliance with standards and certification is a fundamental requirement for DSP technologies in your industry.",
+          "Regulatory quality and reliability management is important for maintaining the integrity of DSP in your industry.",
+          "Conformity to international regulatory frameworks is critical for DSP adoption in your industry."
+        ], strategicAction: "Implement internal QA workflows that comply with national DSP quality protocols, including digital traceability tools."
+      },
+      { factor: "Industry Readiness", weight: -0.20426, indicators: [
+          "Technological and infrastructure readiness is a critical factor for DSP adoption in your industry.",
+          "Workforce and organizational readiness is essential for enabling DSP solutions in your industry.",
+          "Investment in innovation is needed for advancing DSP adoption in your industry."
+        ], strategicAction: "Register with the national vendor onboarding system and diversify DSP supplier engagement based on compliance metrics."
+      },
+      { factor: "Customization Needs", weight: 0.41602, indicators: [
+          "Industry-specific design requirements are essential for DSP adoption in your industry.",
+          "Integration with digital technologies is crucial for facilitating part customization in your industry.",
+          "DSP's impact on supply chain flexibility is important for meeting customization demands in your industry."
+        ], strategicAction: "Participate in regulatory sandboxes and update internal compliance policies based on real-time learnings."
+      },
+      { factor: "Sustainability", weight: 0, indicators: [
+          "Material efficiency and waste reduction are important for a sustainable DSP ecosystem in your industry.",
+          "Lifecycle extension through repair/remanufacturing is necessary for sustainability in DSP adoption in your industry.",
+          "Localized production to reduce supply chain impact is important for sustainable DSP systems in your industry."
+        ], strategicAction: "Use industry-specific DSP readiness kits to benchmark current capabilities and plan targeted adoption roadmaps."
+      },
+      { factor: "Risk Management", weight: 0, indicators: [
+          "The adoption of structured risk management frameworks is essential for mitigating risks related to DSP in your industry.",
+          "Implementing cybersecurity protocols to protect DSP data is important for secure adoption in your industry.",
+          "Operational preparedness to mitigate supply chain disruption risks is necessary for successful DSP implementation in your industry."
+        ], strategicAction: "Adopt modular design principles and integrate them into product development workflows for customized spare parts."
+      },
+      { factor: "Vendor Support", weight: 0.33143, indicators: [
+          "Vendors providing reliable after-sales service and technical assistance is crucial for the success of DSP in your industry.",
+          "Long-term vendor partnerships for hardware and software maintenance are essential for the sustainability of DSP in your industry.",
+          "Assessing and mitigating vendor lock-in risks is important for flexibility in DSP solutions in your industry."
+        ], strategicAction: "Embed circular design and lifecycle tracking into DSP operations to align with national sustainability mandates."
+      },
+      { factor: "Collaboration & Partnerships", weight: 0.21967, indicators: [
+          "Stakeholder collaboration in DSP ecosystem design and implementation is crucial for the success of DSP in your industry.",
+          "The joint development of standardized practices and data-sharing mechanisms is important for enabling DSP in your industry.",
+          "Engagement in cross-functional innovation and ecosystem standardization efforts is essential for successful DSP adoption in your industry."
+        ], strategicAction: "Join the national innovation platform and initiate co-development projects with ecosystem partners."
+      }
+    ];
+    // Relationships (copied from previous answer)
+    const relationships = {
+      "Technological Compatibility": {
+        "Material Availability & Performance": { R: 0.49852, S: 1 },
+        "Infrastructure Requirements": { R: 0.11587, S: 0 },
+        "Cost": { R: 0.60252, S: 1 },
+        "Scalability": { R: 0.01287, S: 0 },
+        "Quality Assurance": { R: 0.28893, S: 1 },
+        "Regulatory Compliance": { R: 0.62855, S: 1 },
+        "Industry Readiness": { R: 0.03182, S: 0 },
+        "Customization Needs": { R: 0.2333, S: 1 },
+        "Sustainability": { R: 0.29628, S: 1 },
+        "Risk Management": { R: 0.52845, S: 1 },
+        "Vendor Support": { R: 0.03081, S: 0 },
+        "Collaboration & Partnerships": { R: 0.03559, S: 0 }
+      },
+      "Material Availability & Performance": {
+        "Infrastructure Requirements": { R: -0.02168, S: 0 },
+        "Cost": { R: 0.09163, S: 0 },
+        "Scalability": { R: 0.45181, S: 1 },
+        "Quality Assurance": { R: -0.05366, S: 0 },
+        "Regulatory Compliance": { R: -0.0568, S: 0 },
+        "Industry Readiness": { R: -0.01447, S: 0 },
+        "Customization Needs": { R: 0.02477, S: 0 },
+        "Sustainability": { R: 0.10376, S: 0 },
+        "Risk Management": { R: 0.50387, S: 1 },
+        "Vendor Support": { R: -0.04518, S: 0 },
+        "Collaboration & Partnerships": { R: 0.0206, S: 0 }
+      },
+      "Infrastructure Requirements": {
+        "Cost": { R: 0.04647, S: 0 },
+        "Scalability": { R: 0.07232, S: 0 },
+        "Quality Assurance": { R: 0.18573, S: 1 },
+        "Regulatory Compliance": { R: 0.2226, S: 1 },
+        "Industry Readiness": { R: 0.5857, S: 1 },
+        "Customization Needs": { R: -0.02704, S: 0 },
+        "Sustainability": { R: -0.00202, S: 0 },
+        "Risk Management": { R: 0.00409, S: 0 },
+        "Vendor Support": { R: 0.02571, S: 0 },
+        "Collaboration & Partnerships": { R: 0.18407, S: 1 }
+      },
+      "Cost": {
+        "Scalability": { R: 0.1536, S: 0 },
+        "Quality Assurance": { R: 0.19218, S: 1 },
+        "Regulatory Compliance": { R: 0.49416, S: 1 },
+        "Industry Readiness": { R: -0.0592, S: 0 },
+        "Customization Needs": { R: 0.08761, S: 0 },
+        "Sustainability": { R: 0.05168, S: 0 },
+        "Risk Management": { R: 0.02265, S: 0 },
+        "Vendor Support": { R: 0.15958, S: 1 },
+        "Collaboration & Partnerships": { R: 0.05853, S: 0 }
+      },
+      "Scalability": {
+        "Quality Assurance": { R: 0.14371, S: 0 },
+        "Regulatory Compliance": { R: 0.09595, S: 0 },
+        "Industry Readiness": { R: 0.48759, S: 1 },
+        "Customization Needs": { R: -0.00151, S: 0 },
+        "Sustainability": { R: 0.05466, S: 0 },
+        "Risk Management": { R: 0.05844, S: 0 },
+        "Vendor Support": { R: 0.0363, S: 0 },
+        "Collaboration & Partnerships": { R: -0.10305, S: 0 }
+      },
+      "Quality Assurance": {
+        "Regulatory Compliance": { R: -0.15634, S: 1 },
+        "Industry Readiness": { R: 0.06638, S: 0 },
+        "Customization Needs": { R: 0.10541, S: 0 },
+        "Sustainability": { R: 0.07464, S: 0 },
+        "Risk Management": { R: 0.47276, S: 1 },
+        "Vendor Support": { R: -0.02996, S: 0 },
+        "Collaboration & Partnerships": { R: 0.08544, S: 0 }
+      },
+      "Regulatory Compliance": {
+        "Industry Readiness": { R: 0.07637, S: 0 },
+        "Customization Needs": { R: -0.04646, S: 0 },
+        "Sustainability": { R: -0.1738, S: 1 },
+        "Risk Management": { R: -0.14799, S: 0 },
+        "Vendor Support": { R: 0.04972, S: 0 },
+        "Collaboration & Partnerships": { R: 0.12015, S: 0 }
+      },
+      "Industry Readiness": {
+        "Customization Needs": { R: 0.00149, S: 0 },
+        "Sustainability": { R: 0.14397, S: 0 },
+        "Risk Management": { R: 0.53318, S: 1 },
+        "Vendor Support": { R: -0.19259, S: 1 },
+        "Collaboration & Partnerships": { R: -0.18637, S: 1 }
+      },
+      "Customization Needs": {
+        "Sustainability": { R: -0.00436, S: 0 },
+        "Risk Management": { R: -0.00625, S: 0 },
+        "Vendor Support": { R: 0.03447, S: 0 },
+        "Collaboration & Partnerships": { R: 0.06529, S: 0 }
+      },
+      "Sustainability": {
+        "Risk Management": { R: 0.05641, S: 0 },
+        "Vendor Support": { R: 0.0424, S: 0 },
+        "Collaboration & Partnerships": { R: -0.0003999, S: 0 }
+      },
+      "Risk Management": {
+        "Vendor Support": { R: 0.11034, S: 0 },
+        "Collaboration & Partnerships": { R: 0.02744, S: 0 }
+      },
+      "Vendor Support": {
+        "Collaboration & Partnerships": { R: 0.39996, S: 1 }
+      }
+    };
+
+    // App state
+    let appState = {
+      page: 'home',
+      surveyStarted: false,
+      surveyFinished: false,
+      currentPage: 0,
+      indicatorResponses: {},
+      criteriaResponses: {}
+    };
+
+    // Helper for relationships lookup
+    function getPairwise(i, j) {
+      const a = factors[i], b = factors[j];
+      if (relationships[a] && relationships[a][b]) return relationships[a][b];
+      if (relationships[b] && relationships[b][a]) return relationships[b][a];
+      return { R: 0, S: 0 };
+    }
+
+    function initState() {
+      appState.indicatorResponses = {};
+      appState.criteriaResponses = {};
+      surveyData.forEach(f => {
+        appState.indicatorResponses[f.factor] = Array(f.indicators.length).fill(5);
+        appState.criteriaResponses[f.factor] = Array(criteriaLabels.length).fill(5);
+      });
+      appState.currentPage = 0;
+      appState.surveyStarted = false;
+      appState.surveyFinished = false;
+    }
+function redoSurvey() {
+  if (confirm("Are you sure you want to redo the survey? All your previous answers will be erased.")) {
+    initState();
+    showSurvey();
+  }
+}
+    function setSidebarActive(page) {
+      document.querySelectorAll('.sidebar ul li').forEach(li => li.classList.remove('active'));
+      document.getElementById('sidebar-' + page).classList.add('active');
+    }
+
+    function navigate(page) {
+      setSidebarActive(page);
+      if (page === 'home') {
+        showWelcome();
+      } else if (page === 'survey') {
+        showSurvey();
+      } else if (page === 'results') {
+        if (appState.surveyFinished) {
+          showSummary();
+        } else {
+          showNotFinished();
+        }
+      } else if (page === 'recommendations') {
+        if (appState.surveyFinished) {
+          showRecommendations();
+        } else {
+          showNotFinished();
+        }
+      } 
+      }
+    
+
+    function showWelcome() {
+      appState.page = 'home';
+      document.getElementById("mainContent").innerHTML = `
+        <div class="factor-section" id="welcomeSection">
+          <div class="factor-title" style="font-size:2em;margin-bottom:8px;">DSP Technology Survey</div>
+          <div style="font-size:1.15em;color:#444;margin-bottom:16px;">
+            Welcome to the Digital Spare Parts (DSP) Technology Assessment Survey
+          </div>
+          <div>
+            This survey evaluates various factors that influence DSP adoption in your industry.
+            You'll be asked to rate statements on a scale of 1-5 across 13 different categories, including strategic actions.
+          </div>
+          <div style="margin-top:22px; margin-bottom:12px; font-weight:500; color:#23527c;">
+            Survey Overview:
+          </div>
+          <ul style="margin: 0 0 22px 20px; padding: 0; color: #333;">
+            <li>13 sections covering key DSP factors</li>
+            <li>3 questions per section + 5 strategic action only sub-questions</li>
+            <li>5-point scale rating (<strong>1 = Strongly Disagree</strong>, <strong>5 = Strongly Agree</strong>)</li>
+            <li>~15 minutes to complete</li>
+          </ul>
+          <div style="text-align:center;">
+            <button class="nav-btn" onclick="navigate('survey')">Start Survey</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function showSurvey() {
+      appState.page = 'survey';
+      appState.surveyStarted = true;
+      renderSurveyPage();
+    }
+
+    function renderSurveyPage() {
+      const currentPage = appState.currentPage;
+      const factorObj = surveyData[currentPage];
+      let html = `<div class="progress-bar-container">
+        <div id="progressBar" class="progress-bar" style="width:${Math.round(((currentPage+1)/surveyData.length)*100)}%;">Page ${currentPage+1} of 13</div>
+      </div>`;
+      html += `<form id="surveyForm">
+        <div id="factorPage"><div class="factor-section">`;
+      html += `<div class="factor-title">${factorObj.factor}</div>`;
+      html += `<div style="margin-bottom:20px;"><b>Rate the following indicators (1 = Strongly Disagree, 5 = Strongly Agree):</b></div>`;
+      factorObj.indicators.forEach((indicator, idx) => {
+        html += `<div class="indicator-block">
+          <div class="indicator-label">${indicator}</div>
+          <div class="rating-group">`;
+        for(let i=1; i<=5; i++) {
+          const checked = (appState.indicatorResponses[factorObj.factor] && appState.indicatorResponses[factorObj.factor][idx] == i) ? "checked" : "";
+          html += `<label><input type="radio" name="ind_${idx}" value="${i}" ${checked} onchange="handleIndicator(${idx},${factorObj.indicators.length})"/>${i}</label>`;
+        }
+        html += `</div></div>`;
+      });
+      html += `<div class="average-score" id="avgScore">Average: -</div>`;
+      html += `<div class="weighted-score" id="weightedScore">Weighted Score: -</div>`;
+      html += `<div class="strategic-action-block">
+        <div class="strategic-action-title">Strategic Action</div>
+        ${factorObj.strategicAction}
+      </div>`;
+      html += `<div style="margin-bottom:20px;"><b>Rate this strategic action against the following criteria:</b></div>`;
+      criteriaLabels.forEach((label, idx) => {
+        html += `<div class="criteria-block">
+          <div class="criteria-label">${label}</div>
+          <div class="rating-group">`;
+        for(let i=1; i<=5; i++) {
+          const checked = (appState.criteriaResponses[factorObj.factor] && appState.criteriaResponses[factorObj.factor][idx] == i) ? "checked" : "";
+          html += `<label><input type="radio" name="crit_${idx}" value="${i}" ${checked} onchange="handleCriteria(${idx},${criteriaLabels.length})"/>${i}</label>`;
+        }
+        html += `</div></div>`;
+      });
+      html += `<div class="criteria-average" id="criteriaAvg">Criteria Average: -</div>`;
+      html += `<div class="directrel-score" id="directRelScore">Direct Relationship Score: -</div>`;
+      html += `</div></div>
+        <div class="survey-nav">
+          <button type="button" class="nav-btn" onclick="prevPage()" id="prevBtn" ${currentPage === 0 ? "disabled" : ""}>Previous</button>
+          <button type="button" class="nav-btn" onclick="nextPage()" id="nextBtn">${currentPage === surveyData.length-1 ? "Finish" : "Next"}</button>
+        </div>
+      </form>`;
+      document.getElementById("mainContent").innerHTML = html;
+      updateAverages();
+      updateCriteriaAverage();
+      updateDirectRelScore();
+    }
+
+    function handleIndicator(idx, total) {
+      const factorObj = surveyData[appState.currentPage];
+      if(!appState.indicatorResponses[factorObj.factor]) appState.indicatorResponses[factorObj.factor] = Array(total).fill(5);
+      const radios = document.getElementsByName(`ind_${idx}`);
+      for(let radio of radios) if(radio.checked) appState.indicatorResponses[factorObj.factor][idx] = Number(radio.value);
+      updateAverages();
+      updateDirectRelScore();
+    }
+    function updateAverages() {
+      const factorObj = surveyData[appState.currentPage];
+      const vals = appState.indicatorResponses[factorObj.factor] || [];
+      let count = 0, sum = 0;
+      for(let v of vals) if(v) { sum+=v; count++; }
+      const avg = (count === factorObj.indicators.length) ? (sum/count).toFixed(2) : "-";
+      document.getElementById("avgScore").innerText = `Average: ${avg}`;
+      let weighted = "-";
+      if(avg !== "-") {
+        weighted = (avg * factorObj.weight).toFixed(4);
+      }
+      document.getElementById("weightedScore").innerText = `Weighted Score: ${weighted}`;
+    }
+    function handleCriteria(idx, total) {
+      const factorObj = surveyData[appState.currentPage];
+      if(!appState.criteriaResponses[factorObj.factor]) appState.criteriaResponses[factorObj.factor] = Array(total).fill(5);
+      const radios = document.getElementsByName(`crit_${idx}`);
+      for(let radio of radios) if(radio.checked) appState.criteriaResponses[factorObj.factor][idx] = Number(radio.value);
+      updateCriteriaAverage();
+      updateDirectRelScore();
+    }
+    function updateCriteriaAverage() {
+      const factorObj = surveyData[appState.currentPage];
+      const vals = appState.criteriaResponses[factorObj.factor] || [];
+      let count = 0, sum = 0;
+      for(let v of vals) if(v) { sum+=v; count++; }
+      const avg = (count === criteriaLabels.length) ? (sum/count).toFixed(2) : "-";
+      document.getElementById("criteriaAvg").innerText = `Criteria Average: ${avg}`;
+    }
+    function updateDirectRelScore() {
+      const factorObj = surveyData[appState.currentPage];
+      const inds = appState.indicatorResponses[factorObj.factor] || [];
+      const crits = appState.criteriaResponses[factorObj.factor] || [];
+      let indAvg = null, weighted = null, critAvg = null, directRelScore = "-";
+      if(inds.length === factorObj.indicators.length && inds.every(x=>!!x)) {
+        indAvg = inds.reduce((a,b)=>a+b,0)/inds.length;
+        weighted = indAvg * factorObj.weight;
+      }
+      if(crits.length === criteriaLabels.length && crits.every(x=>!!x)) {
+        critAvg = crits.reduce((a,b)=>a+b,0)/crits.length;
+      }
+      if(weighted !== null && critAvg !== null) {
+        directRelScore = (Number(weighted) * Number(critAvg)).toFixed(4);
+      }
+      document.getElementById("directRelScore").innerText = `Direct Relationship Score: ${directRelScore}`;
+    }
+
+    function prevPage() {
+      if(appState.currentPage > 0) {
+        appState.currentPage--;
+        renderSurveyPage();
+      }
+    }
+    function nextPage() {
+      if(appState.currentPage < surveyData.length-1) {
+        appState.currentPage++;
+        renderSurveyPage();
+      } else {
+        appState.surveyFinished = true;
+        navigate('results');
+      }
+    }
+
+    // Calculation helpers for results
+    function calculateUpdatedWeights() {
+      return surveyData.map(factorObj => {
+        const inds = appState.indicatorResponses[factorObj.factor];
+        const indAvg = inds.reduce((a,b)=>a+b,0)/inds.length;
+        return indAvg * factorObj.weight;
+      });
+    }
+    function calculateIndirectImpact(updatedWeights) {
+      const n = factors.length;
+      const impact = {};
+      for (let i = 0; i < n; i++) {
+        let sum = 0;
+        for (let j = 0; j < n; j++) {
+          if (i === j) continue;
+          const pair = getPairwise(i, j);
+          let term = 0;
+          if (pair.S === 1) {
+            term = updatedWeights[i] * updatedWeights[j] * pair.R;
+          }
+          sum += term;
+        }
+        impact[factors[i]] = sum;
+      }
+      return impact;
+    }
+
+    // --- Results page with charts, table toggle, and download ---
+    function showSummary() {
+      appState.page = 'results';
+      const updatedWeights = calculateUpdatedWeights();
+      const directScores = [];
+      const finalReadinessScores = [];
+      const indirectImpact = calculateIndirectImpact(updatedWeights);
+      const indicatorAverages = [];
+      const criteriaAverages = [];
+      for(let i=0; i<surveyData.length; i++) {
+        const factorObj = surveyData[i];
+        const inds = appState.indicatorResponses[factorObj.factor];
+        const crits = appState.criteriaResponses[factorObj.factor];
+        const indAvg = inds.reduce((a,b)=>a+b,0)/inds.length;
+        indicatorAverages[i] = indAvg;
+        const weighted = (indAvg * factorObj.weight);
+        const critAvg = crits.reduce((a,b)=>a+b,0)/crits.length;
+        criteriaAverages[i] = critAvg;
+        directScores[i] = (weighted * critAvg);
+      }
+      // Final Readiness Scores array
+      for(let i=0; i<surveyData.length; i++) {
+        const factorObj = surveyData[i];
+        const inds = appState.indicatorResponses[factorObj.factor];
+        const crits = appState.criteriaResponses[factorObj.factor];
+        const indAvg = inds.reduce((a,b)=>a+b,0)/inds.length;
+        const updatedWeight = (indAvg * factorObj.weight).toFixed(2);
+        const critAvg = crits.reduce((a,b)=>a+b,0)/crits.length;
+        const directRelScore = (Number(updatedWeight) * Number(critAvg)).toFixed(4);
+        const indirectRel = indirectImpact[factorObj.factor].toFixed(2);
+        const finalReadiness = (parseFloat(directRelScore) + parseFloat(indirectRel));
+        finalReadinessScores.push(finalReadiness);
+      }
+      const minFR = Math.min(...finalReadinessScores);
+      const maxFR = Math.max(...finalReadinessScores);
+
+      // Build result table html (hidden by default)
+      let table = `<table class="results-table" id="resultsTable">
+          <tr>
+            <th>Factor</th>
+            <th>Indicators Avg</th>
+            <th>SEM Weight</th>
+            <th>Updated Weight</th>
+            <th>Strategic Action Avg</th>
+            <th>Direct Relationship Score</th>
+            <th>Indirect Relationship Impact</th>
+            <th style="background:#e0f4ff;">Final Readiness Score</th>
+            <th style="background:#eaffea;"> Readiness Score</th>
+          </tr>`;
+      for(let i=0; i<surveyData.length; i++) {
+        const factorObj = surveyData[i];
+        const inds = appState.indicatorResponses[factorObj.factor];
+        const crits = appState.criteriaResponses[factorObj.factor];
+        const indAvg = inds.reduce((a,b)=>a+b,0)/inds.length;
+        const updatedWeight = (indAvg * factorObj.weight).toFixed(2);
+        const critAvg = crits.reduce((a,b)=>a+b,0)/crits.length;
+        const directRelScore = (Number(updatedWeight) * Number(critAvg)).toFixed(4);
+        const indirectRel = indirectImpact[factorObj.factor].toFixed(2);
+        const finalReadiness = finalReadinessScores[i];
+        let pctScore = "-";
+        if (maxFR !== minFR) {
+          pctScore = ((finalReadiness - minFR) / (maxFR - minFR));
+          pctScore = (pctScore * 100).toFixed(1) + "%";
+        } else {
+          pctScore = "100%";
+        }
+        table += `<tr>
+          <td>${factorObj.factor}</td>
+          <td>${indAvg.toFixed(2)}</td>
+          <td>${factorObj.weight}</td>
+          <td>${updatedWeight}</td>
+          <td>${critAvg.toFixed(2)}</td>
+          <td>${directRelScore}</td>
+          <td>${indirectRel}</td>
+          <td class="final-readiness-score"><b>${finalReadiness.toFixed(4)}</b></td>
+          <td class="percent-score"><b>${pctScore}</b></td>
+        </tr>`;
+      }
+      table += `</table>`;
+
+      // Radar and bar chart containers
+      let html = `<div class="results-section" id="resultsSection">
+        <h2>Survey Completed</h2>
+        <p>Thank you for completing the survey.<br>Here is a summary of your responses.</p>
+       <div class="chart-wrapper" style="max-width:900px;">
+       <canvas id="radarChart" width="850" height="450"></canvas>
+        </div>
+        <div class="bar-chart-wrapper">
+          <canvas id="barChart"></canvas>
+        </div>
+        <div style="margin:13px 0 16px 0;">
+          <button class="toggle-table-btn" onclick="toggleResultTable()">Show/Hide Results Table</button>
+          <button class="toggle-table-btn" onclick="downloadTableCSV()">Download Table (CSV)</button>
+      <button class="toggle-table-btn" style="background:#fceaea;color:#b40000;border-color:#b40000;" onclick="redoSurvey()">&#x21bb; Redo Survey</button>
+        </div>
+        <div style="font-size:1.09em; margin-bottom:14px; color:#333;">
+      
+        </div>
+        ${table}
+      </div>`;
+
+      document.getElementById("mainContent").innerHTML = html;
+      // Show chart after DOM is updated
+      setTimeout(() => drawCharts(finalReadinessScores), 40);
+    }
+
+    // --- Recommendations Page
+function showRecommendations() {
+  // Calculate percent scores as before
+  const updatedWeights = calculateUpdatedWeights();
+  const indirectImpact = calculateIndirectImpact(updatedWeights);
+  const finalReadinessScores = [];
+  for (let i = 0; i < surveyData.length; i++) {
+    const factorObj = surveyData[i];
+    const inds = appState.indicatorResponses[factorObj.factor];
+    const crits = appState.criteriaResponses[factorObj.factor];
+    const indAvg = inds.reduce((a, b) => a + b, 0) / inds.length;
+    const updatedWeight = (indAvg * factorObj.weight).toFixed(2);
+    const critAvg = crits.reduce((a, b) => a + b, 0) / crits.length;
+    const directRelScore = (Number(updatedWeight) * Number(critAvg)).toFixed(4);
+    const indirectRel = indirectImpact[factorObj.factor].toFixed(2);
+    const finalReadiness = (parseFloat(directRelScore) + parseFloat(indirectRel));
+    finalReadinessScores.push(finalReadiness);
+  }
+  const minFR = Math.min(...finalReadinessScores);
+  const maxFR = Math.max(...finalReadinessScores);
+  const percentScores = finalReadinessScores.map(x =>
+    maxFR !== minFR ? ((x - minFR) / (maxFR - minFR)) * 100 : 100
+  );
+
+  function getBadgeClass(score) {
+    if (score <= 50) return "low";
+    if (score <= 75) return "medium";
+    return "high";
+  }
+
+  // Helper for recommendations cards
+  const prettyCards = (arr, color, type) =>
+    arr.map((x, idx) => `
+      <div class="rec-card rec-${type}" style="border-left-color:${color};">
+        <span class="rec-step" style="background:${color};">${idx + 1}</span>
+        <span>${x}</span>
+      </div>
+    `).join("");
+
+  let html = `<div class="results-section" id="recommendationsSection">
+    <h2 style="margin-bottom:18px;">DSP Recommendations by Factor</h2>
+    <div style="font-size:1.10em; margin-bottom:22px;">
+      Recommendations below are tailored to your <b>readiness score</b> for each factor.
+    </div>
+    <div style="margin-top:28px;">`;
+
+  html += factors.map((fac, i) => {
+    const plan = ecosystemPlan[fac] || {};
+    const score = percentScores[i];
+    let scoreStr = (score !== undefined && !isNaN(score)) ? score.toFixed(1) + "%" : "-";
+    let badgeClass = getBadgeClass(score);
+
+    // Compose recommendations section
+    let rec = "";
+
+    if (score <= 50) {
+      if (plan.shortTerm) {
+        rec += `<div class="rec-title" style="color:#2477d6;">&#128640; Short-Term Sub-Actions</div>
+          ${prettyCards(plan.shortTerm, "#2477d6", "short")}`;
+      }
+      if (plan.acceleration) {
+        rec += `<div class="rec-title" style="color:#e6841b;">&#9889; Acceleration Mechanism</div>
+          ${prettyCards(plan.acceleration, "#e6841b", "accl")}`;
+      }
+    } else if (score > 50 && score <= 75) {
+      if (plan.shortTerm) {
+        rec += `<div class="rec-title" style="color:#2477d6;">&#128640; Short-Term Sub-Actions</div>
+          ${prettyCards(plan.shortTerm, "#2477d6", "short")}`;
+      }
+      if (plan.longTerm) {
+        rec += `<div class="rec-title" style="color:#21a179;">&#128187; Long-Term Sub-Actions</div>
+          ${prettyCards(plan.longTerm, "#21a179", "long")}`;
+      }
+      if (plan.acceleration) {
+        rec += `<div class="rec-title" style="color:#e6841b;">&#9889; Acceleration Mechanism</div>
+          ${prettyCards(plan.acceleration, "#e6841b", "accl")}`;
+      }
+    } else {
+      if (plan.longTerm) {
+        rec += `<div class="rec-title" style="color:#21a179;">&#128187; Long-Term Sub-Actions</div>
+          ${prettyCards(plan.longTerm, "#21a179", "long")}`;
+      }
+      if (plan.acceleration) {
+        rec += `<details class="rec-card rec-accl">
+          <summary>&#9889; Acceleration Mechanism (Optional, click to expand)</summary>
+          ${prettyCards(plan.acceleration, "#e6841b", "accl")}
+        </details>`;
+      }
+    }
+
+    return `
+      <div style="margin-bottom:36px;">
+        <div class="factor-score-row">
+          <span class="factor-score-label">${fac}</span>
+          <span class="factor-score-badge ${badgeClass}">${scoreStr}</span>
+        </div>
+        <div>
+          ${rec || '<div style="color:#888;font-size:0.96em;">No recommendations available for this factor.</div>'}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  html += `</div>
+    <div style="text-align:right; margin: 18px 0 8px 0;">
+      <button class="toggle-table-btn"
+              style="background:#fceaea;color:#b40000;border-color:#b40000;"
+              onclick="redoSurvey()">&#x21bb; Redo Survey</button>
+    </div>
+  </div>`;
+
+  document.getElementById("mainContent").innerHTML = html;
+}
+
+    function drawCharts(finalReadinessScores) {
+      // Radar Chart - Final Readiness Score (scaled 0-5 for radar)
+      const radarMax = Math.max(...finalReadinessScores);
+      const radarMin = Math.min(...finalReadinessScores);
+      const radarData = finalReadinessScores.map(x =>
+        radarMax !== radarMin ? ((x - radarMin)/(radarMax-radarMin))*5 : 5
+      );
+      if(window.radarChartObj) window.radarChartObj.destroy();
+      window.radarChartObj = new Chart(document.getElementById('radarChart'), {
+        type: 'radar',
+        data: {
+          labels: factors,
+          datasets: [{
+            label: "Final Readiness ",
+            data: radarData,
+            fill: false,
+            backgroundColor: "rgba(0,0,0,0)",
+            borderColor: "#0099cc",
+            pointBackgroundColor: "#0099cc",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "#0099cc"
+          }]
+        },
+        options: {
+          responsive: false,
+          plugins: { legend: {display: false}},
+          scales: {
+            r: {
+              beginAtZero:true,
+              min:0,
+              max:5,
+              ticks: { stepSize: 1, color:"#222" },
+              pointLabels: { font: { size: 13, weight: "bold" }, color: "#31415a" }
+            }
+          }
+        }
+      });
+
+      // Bar Chart - Readiness Score per factor
+      const minFR = Math.min(...finalReadinessScores);
+      const maxFR = Math.max(...finalReadinessScores);
+      const pctData = finalReadinessScores.map(x =>
+        maxFR !== minFR ? ((x - minFR)/(maxFR-minFR))*100 : 100
+      );
+      if(window.barChartObj) window.barChartObj.destroy();
+      window.barChartObj = new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+          labels: factors,
+          datasets: [{
+            label: "Readiness Score",
+            data: pctData,
+            backgroundColor: "rgba(67,198,228,0.7)",
+            borderColor: "#0099cc",
+            borderWidth: 1,
+            hoverBackgroundColor: "#0099cc"
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: { legend: {display: false}},
+          scales: {
+            x: {
+              min: 0,
+              max: 100,
+              ticks: { color: "#222", callback: v=>v+"%" },
+              grid: { color: "#e0f4ff"}
+            },
+            y: {
+              ticks: { color: "#31415a", font: {weight:600}},
+              grid: { color: "#e0f4ff"}
+            }
+          }
+        }
+      });
+    }
+
+    function downloadResults() {
+      const updatedWeights = calculateUpdatedWeights();
+      const indirectImpact = calculateIndirectImpact(updatedWeights);
+      const results = [];
+      const finalReadinessScores = [];
+      for(let i=0; i<surveyData.length; i++) {
+        const factorObj = surveyData[i];
+        const inds = appState.indicatorResponses[factorObj.factor];
+        const crits = appState.criteriaResponses[factorObj.factor];
+        const indAvg = inds.reduce((a,b)=>a+b,0)/inds.length;
+        const updatedWeight = (indAvg * factorObj.weight).toFixed(2);
+        const critAvg = crits.reduce((a,b)=>a+b,0)/crits.length;
+        const directRelScore = (Number(updatedWeight) * Number(critAvg)).toFixed(4);
+        const indirectRel = indirectImpact[factorObj.factor].toFixed(2);
+        const finalReadiness = (parseFloat(directRelScore) + parseFloat(indirectRel));
+        finalReadinessScores.push(finalReadiness);
+      }
+      const minFR = Math.min(...finalReadinessScores);
+      const maxFR = Math.max(...finalReadinessScores);
+
+      for(let i=0; i<surveyData.length; i++) {
+        const factorObj = surveyData[i];
+        const inds = appState.indicatorResponses[factorObj.factor];
+        const crits = appState.criteriaResponses[factorObj.factor];
+        const indAvg = inds.reduce((a,b)=>a+b,0)/inds.length;
+        const updatedWeight = (indAvg * factorObj.weight).toFixed(2);
+        const critAvg = crits.reduce((a,b)=>a+b,0)/crits.length;
+        const directRelScore = (Number(updatedWeight) * Number(critAvg)).toFixed(4);
+        const indirectRel = indirectImpact[factorObj.factor].toFixed(2);
+        const finalReadiness = finalReadinessScores[i];
+        let pctScore = "-";
+        if (maxFR !== minFR) {
+          pctScore = ((finalReadiness - minFR) / (maxFR - minFR));
+          pctScore = (pctScore * 100).toFixed(1) + "%";
+        } else {
+          pctScore = "100%";
+        }
+        results.push({
+          factor: factorObj.factor,
+          indicatorResponses: inds,
+          indicatorAverage: indAvg.toFixed(2),
+          semWeight: factorObj.weight,
+          updatedWeight: updatedWeight,
+          strategicAction: factorObj.strategicAction,
+          criteriaResponses: crits,
+          criteriaAverage: critAvg.toFixed(2),
+          directRelationshipScore: directRelScore,
+          indirectRelationshipImpact: indirectRel,
+          finalReadinessScore: finalReadiness.toFixed(4),
+          percentScore: pctScore
+        });
+      }
+      const blob = new Blob([JSON.stringify(results, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dsp_survey_results.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function downloadTableCSV() {
+      const table = document.getElementById('resultsTable');
+      let csv = '';
+      if (!table) return;
+      for (let r = 0; r < table.rows.length; r++) {
+        let row = [];
+        for (let c = 0; c < table.rows[r].cells.length; c++) {
+          let val = table.rows[r].cells[c].innerText.replace(/"/g, '""');
+          row.push('"' + val + '"');
+        }
+        csv += row.join(',') + '\n';
+      }
+      const blob = new Blob([csv], {type: 'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dsp_survey_results.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function toggleResultTable() {
+      const table = document.getElementById('resultsTable');
+      if (!table) return;
+      table.classList.toggle('visible');
+    }
+
+    function showNotFinished() {
+      document.getElementById("mainContent").innerHTML = `
+        <div class="factor-section" style="text-align:center;">
+          <h2>Survey Not Completed</h2>
+          <p>Please complete the survey before viewing results.</p>
+          <div style="margin-top:24px;">
+            <button class="nav-btn" onclick="navigate('survey')">Continue Survey</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function showSettings() {
+      appState.page = 'settings';
+      document.getElementById("mainContent").innerHTML = `
+        <div class="settings-section">
+          <h2>Settings</h2>
+          <p>Settings feature coming soon.</p>
+        </div>
+      `;
+    }
+
+    window.onload = function() {
+      initState();
+      showWelcome();
+    };
+  </script>
+</body>
+</html>
