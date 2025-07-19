@@ -497,6 +497,24 @@ details.rec-card summary {
     align-self: flex-start;
   }
 }
+/* Mobile-friendly results table and charts */
+.results-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+.results-table {
+  min-width: 600px;
+  width: 100%;
+}
+.chart-wrapper, .bar-chart-wrapper {
+  max-width: 100vw;
+  min-width: 0;
+}
+canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100vw;
+}
   </style>
 </head>
 <body>
@@ -1237,7 +1255,7 @@ function redoSurvey() {
         <h2>Survey Completed</h2>
         <p>Thank you for completing the survey.<br>Here is a summary of your responses.</p>
        <div class="chart-wrapper" style="max-width:900px;">
-       <canvas id="radarChart" width="850" height="450"></canvas>
+       <canvas id="radarChart"></canvas>
         </div>
         <div class="bar-chart-wrapper">
           <canvas id="barChart"></canvas>
@@ -1250,7 +1268,7 @@ function redoSurvey() {
         <div style="font-size:1.09em; margin-bottom:14px; color:#333;">
       
         </div>
-        ${table}
+        <div class="results-table-wrapper">${table}</div>
       </div>`;
 
       document.getElementById("mainContent").innerHTML = html;
